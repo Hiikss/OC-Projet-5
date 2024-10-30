@@ -20,7 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Date;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,7 +45,7 @@ class SessionControllerTest {
     @Test
     @DisplayName("GET /api/session/{id} - Success")
     void testFindById_Success() throws Exception {
-        // Arrange
+        // GIVEN
         Session session = new Session();
 
         SessionDto sessionDto = new SessionDto();
@@ -52,7 +53,8 @@ class SessionControllerTest {
         when(sessionService.getById(1L)).thenReturn(session);
         when(sessionMapper.toDto(session)).thenReturn(sessionDto);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/session/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -62,10 +64,11 @@ class SessionControllerTest {
     @Test
     @DisplayName("GET /api/session/{id} - Not Found")
     void testFindById_NotFound() throws Exception {
-        // Arrange
+        // GIVEN
         when(sessionService.getById(1L)).thenReturn(null);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/session/1"))
                 .andExpect(status().isNotFound());
     }
@@ -73,7 +76,10 @@ class SessionControllerTest {
     @Test
     @DisplayName("GET /api/session/{id} - Bad Request")
     void testFindById_BadRequest() throws Exception {
-        // Act and Assert
+        // GIVEN
+
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/session/invalid-id"))
                 .andExpect(status().isBadRequest());
     }
@@ -81,7 +87,7 @@ class SessionControllerTest {
     @Test
     @DisplayName("GET /api/session - Success")
     void testFindAll_Success() throws Exception {
-        // Arrange
+        // GIVEN
         Session session1 = new Session();
         Session session2 = new Session();
         List<Session> sessions = List.of(session1, session2);
@@ -90,7 +96,8 @@ class SessionControllerTest {
         when(sessionService.findAll()).thenReturn(sessions);
         when(sessionMapper.toDto(sessions)).thenReturn(sessionDtos);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/session"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -100,7 +107,7 @@ class SessionControllerTest {
     @Test
     @DisplayName("POST /api/session - Create Session Success")
     void testCreateSession_Success() throws Exception {
-        // Arrange
+        // GIVEN
         Session session = new Session();
         SessionDto sessionDto = new SessionDto();
         sessionDto.setId(1L);
@@ -113,7 +120,8 @@ class SessionControllerTest {
         when(sessionService.create(any(Session.class))).thenReturn(session);
         when(sessionMapper.toDto(session)).thenReturn(sessionDto);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mockMvc.perform(post("/api/session")
@@ -127,7 +135,7 @@ class SessionControllerTest {
     @Test
     @DisplayName("PUT /api/session/{id} - Update Session Success")
     void testUpdateSession_Success() throws Exception {
-        // Arrange
+        // GIVEN
         Session session = new Session();
         SessionDto sessionDto = new SessionDto();
         sessionDto.setId(1L);
@@ -140,7 +148,8 @@ class SessionControllerTest {
         when(sessionService.update(eq(1L), any(Session.class))).thenReturn(session);
         when(sessionMapper.toDto(session)).thenReturn(sessionDto);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         mockMvc.perform(put("/api/session/1")
@@ -154,7 +163,7 @@ class SessionControllerTest {
     @Test
     @DisplayName("PUT /api/session/{id} - Bad Request")
     void testUpdateSession_BadRequest() throws Exception {
-        // Arrange
+        // GIVEN
         SessionDto sessionDto = new SessionDto();
         sessionDto.setId(1L);
         sessionDto.setName("test");
@@ -164,7 +173,8 @@ class SessionControllerTest {
 
         when(sessionService.update(eq(1L), any())).thenThrow(NumberFormatException.class);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(put("/api/session/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(sessionDto)))
@@ -174,11 +184,12 @@ class SessionControllerTest {
     @Test
     @DisplayName("DELETE /api/session/{id} - Delete Session Success")
     void testDeleteSession_Success() throws Exception {
-        // Arrange
+        // GIVEN
         Session session = new Session();
         when(sessionService.getById(1L)).thenReturn(session);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/session/1"))
                 .andExpect(status().isOk());
     }
@@ -186,12 +197,13 @@ class SessionControllerTest {
     @Test
     @DisplayName("DELETE /api/session/{id} - Bad Request")
     void testDeleteSession_BadRequest() throws Exception {
-        // Arrange
+        // GIVEN
         Session session = new Session();
         when(sessionService.getById(1L)).thenReturn(session);
         doThrow(new NumberFormatException()).when(sessionService).delete(1L);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/session/1"))
                 .andExpect(status().isBadRequest());
     }
@@ -199,10 +211,11 @@ class SessionControllerTest {
     @Test
     @DisplayName("DELETE /api/session/{id} - Not Found")
     void testDeleteSession_NotFound() throws Exception {
-        // Arrange
+        // GIVEN
         when(sessionService.getById(1L)).thenReturn(null);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/session/1"))
                 .andExpect(status().isNotFound());
     }
@@ -210,7 +223,10 @@ class SessionControllerTest {
     @Test
     @DisplayName("POST /api/session/{id}/participate/{userId} - Participate in Session Success")
     void testParticipateInSession_Success() throws Exception {
-        // Act and Assert
+        // GIVEN
+
+        // WHEN
+        // THEN
         mockMvc.perform(post("/api/session/1/participate/2"))
                 .andExpect(status().isOk());
     }
@@ -218,7 +234,10 @@ class SessionControllerTest {
     @Test
     @DisplayName("DELETE /api/session/{id}/participate/{userId} - No Longer Participate Success")
     void testNoLongerParticipateInSession_Success() throws Exception {
-        // Act and Assert
+        // GIVEN
+
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/session/1/participate/2"))
                 .andExpect(status().isOk());
     }
@@ -226,7 +245,10 @@ class SessionControllerTest {
     @Test
     @DisplayName("POST /api/session/{id}/participate/{userId} - Bad Request")
     void testParticipateInSession_BadRequest() throws Exception {
-        // Act and Assert
+        // GIVEN
+
+        // WHEN
+        // THEN
         mockMvc.perform(post("/api/session/invalid-id/participate/2"))
                 .andExpect(status().isBadRequest());
     }
@@ -234,7 +256,10 @@ class SessionControllerTest {
     @Test
     @DisplayName("DELETE /api/session/{id}/participate/{userId} - Bad Request")
     void testNoLongerParticipateInSession_BadRequest() throws Exception {
-        // Act and Assert
+        // GIVEN
+
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/session/invalid-id/participate/2"))
                 .andExpect(status().isBadRequest());
     }

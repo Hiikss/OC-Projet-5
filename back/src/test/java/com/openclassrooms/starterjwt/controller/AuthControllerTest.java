@@ -56,12 +56,11 @@ class AuthControllerTest {
     @Test
     @DisplayName("POST /api/auth/login - Successful Authentication")
     void testAuthenticateUser_Success() throws Exception {
-        // Arrange
+        // GIVEN
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("test@test.com");
         loginRequest.setPassword("password");
 
-        // Mocking authentication success
         Authentication authentication = mock(Authentication.class);
         UserDetailsImpl userDetails = new UserDetailsImpl(1L, "user@example.com", "John", "Doe", false, "password");
 
@@ -72,7 +71,8 @@ class AuthControllerTest {
         User user = new User("user@example.com", "Doe", "John", "encodedPassword", false);
         when(userRepository.findByEmail(userDetails.getUsername())).thenReturn(Optional.of(user));
 
-        // Act & Assert
+        // WHEN
+        // THEN
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(loginRequest)))
@@ -87,12 +87,11 @@ class AuthControllerTest {
     @Test
     @DisplayName("POST /api/auth/login - No User")
     void testAuthenticateUser_NoUser() throws Exception {
-        // Arrange
+        // GIVEN
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("test@test.com");
         loginRequest.setPassword("password");
 
-        // Mocking authentication success
         Authentication authentication = mock(Authentication.class);
         UserDetailsImpl userDetails = new UserDetailsImpl(1L, "user@example.com", "John", "Doe", false, "password");
 
@@ -103,7 +102,8 @@ class AuthControllerTest {
         User user = new User("user@example.com", "Doe", "John", "encodedPassword", false);
         when(userRepository.findByEmail(userDetails.getUsername())).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // WHEN
+        // THEN
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(loginRequest)))
@@ -118,7 +118,7 @@ class AuthControllerTest {
     @Test
     @DisplayName("POST /api/auth/register - Successful Registration")
     void testRegisterUser_Success() throws Exception {
-        // Arrange
+        // GIVEN
         SignupRequest signUpRequest = new SignupRequest();
         signUpRequest.setEmail("test@test.com");
         signUpRequest.setPassword("password");
@@ -128,7 +128,8 @@ class AuthControllerTest {
         when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(signUpRequest.getPassword())).thenReturn("encodedPassword");
 
-        // Act & Assert
+        // WHEN
+        // THEN
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(signUpRequest)))
@@ -140,7 +141,7 @@ class AuthControllerTest {
     @Test
     @DisplayName("POST /api/auth/register - Email Already Taken")
     void testRegisterUser_EmailTaken() throws Exception {
-        // Arrange
+        // GIVEN
         SignupRequest signUpRequest = new SignupRequest();
         signUpRequest.setEmail("test@test.com");
         signUpRequest.setPassword("password");
@@ -149,7 +150,8 @@ class AuthControllerTest {
 
         when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(true);
 
-        // Act & Assert
+        // WHEN
+        // THEN
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(signUpRequest)))

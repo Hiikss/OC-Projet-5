@@ -45,7 +45,8 @@ class TeacherControllerTest {
         when(teacherService.findById(1L)).thenReturn(teacher);
         when(teacherMapper.toDto(teacher)).thenReturn(new TeacherDto());
 
-        // WHEN THEN
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/teacher/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -58,7 +59,8 @@ class TeacherControllerTest {
         // GIVEN
         when(teacherService.findById(1L)).thenReturn(null);
 
-        // WHEN THEN
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/teacher/1"))
                 .andExpect(status().isNotFound());
     }
@@ -68,7 +70,8 @@ class TeacherControllerTest {
     void testFindById_BadRequest() throws Exception {
         // GIVEN
 
-        // WHEN THEN
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/teacher/invalid-id"))
                 .andExpect(status().isBadRequest());
     }
@@ -88,7 +91,8 @@ class TeacherControllerTest {
         when(teacherService.findAll()).thenReturn(teachers);
         when(teacherMapper.toDto(teachers)).thenReturn(teacherDtos);
 
-        // WHEN THEN
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/teacher"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

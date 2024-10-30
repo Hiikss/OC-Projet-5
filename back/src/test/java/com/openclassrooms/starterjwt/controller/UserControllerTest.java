@@ -45,14 +45,15 @@ class UserControllerTest {
     @Test
     @DisplayName("GET /api/user/{id} - Success")
     void testFindById_Success() throws Exception {
-        // Arrange
+        // GIVEN
         User user = new User();
 
         UserDto userDto = new UserDto();
         when(userService.findById(1L)).thenReturn(user);
         when(userMapper.toDto(user)).thenReturn(userDto);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -62,10 +63,11 @@ class UserControllerTest {
     @Test
     @DisplayName("GET /api/user/{id} - Not Found")
     void testFindById_NotFound() throws Exception {
-        // Arrange
+        // GIVEN
         when(userService.findById(1L)).thenReturn(null);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isNotFound());
     }
@@ -73,7 +75,10 @@ class UserControllerTest {
     @Test
     @DisplayName("GET /api/user/{id} - Bad Request")
     void testFindById_BadRequest() throws Exception {
-        // Act and Assert
+        // GIVEN
+
+        // WHEN
+        // THEN
         mockMvc.perform(get("/api/user/invalid-id"))
                 .andExpect(status().isBadRequest());
     }
@@ -82,7 +87,7 @@ class UserControllerTest {
     @DisplayName("DELETE /api/user/{id} - Success")
     @WithMockUser(username = "user@example.com")
     void testDeleteUser_Success() throws Exception {
-        // Arrange
+        // GIVEN
         User user = User.builder()
                 .id(1L)
                 .email("user@example.com")
@@ -94,7 +99,6 @@ class UserControllerTest {
                 .updatedAt(LocalDateTime.now()).build();
         when(userService.findById(1L)).thenReturn(user);
 
-        // Mock user details in the security context
         UserDetails userDetails = org.springframework.security.core.userdetails.User
                 .withUsername("user@example.com")
                 .password("password")
@@ -103,7 +107,8 @@ class UserControllerTest {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/user/1"))
                 .andExpect(status().isOk());
     }
@@ -112,11 +117,12 @@ class UserControllerTest {
     @DisplayName("DELETE /api/user/{id} - Unauthorized")
     @WithMockUser(username = "otheruser@example.com")
     void testDeleteUser_Unauthorized() throws Exception {
-        // Arrange
+        // GIVEN
         User user = new User();
         when(userService.findById(1L)).thenReturn(user);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/user/1"))
                 .andExpect(status().isUnauthorized());
     }
@@ -125,10 +131,11 @@ class UserControllerTest {
     @DisplayName("DELETE /api/user/{id} - Not Found")
     @WithMockUser(username = "user@example.com")
     void testDeleteUser_NotFound() throws Exception {
-        // Arrange
+        // GIVEN
         when(userService.findById(1L)).thenReturn(null);
 
-        // Act and Assert
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/user/1"))
                 .andExpect(status().isNotFound());
     }
@@ -137,7 +144,10 @@ class UserControllerTest {
     @DisplayName("DELETE /api/user/{id} - Bad Request")
     @WithMockUser(username = "user@example.com")
     void testDeleteUser_BadRequest() throws Exception {
-        // Act and Assert
+        // GIVEN
+
+        // WHEN
+        // THEN
         mockMvc.perform(delete("/api/user/invalid-id"))
                 .andExpect(status().isBadRequest());
     }

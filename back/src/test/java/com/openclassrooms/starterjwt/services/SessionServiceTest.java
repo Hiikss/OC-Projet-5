@@ -60,7 +60,7 @@ class SessionServiceTest {
     @Test
     void testFindAll() {
         // GIVEN
-        List<Session> sessions = new ArrayList<>()  ;
+        List<Session> sessions = new ArrayList<>();
         when(sessionRepository.findAll()).thenReturn(sessions);
 
         // WHEN
@@ -133,7 +133,6 @@ class SessionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // WHEN
-
         // THEN
         assertDoesNotThrow(() -> sessionService.participate(sessionId, userId));
         assertTrue(session.getUsers().contains(user));
@@ -149,7 +148,6 @@ class SessionServiceTest {
         when(sessionRepository.findById(sessionId)).thenReturn(Optional.empty());
 
         // WHEN
-
         // THEN
         assertThrows(NotFoundException.class, () -> sessionService.participate(sessionId, userId));
         verify(sessionRepository, never()).save(any());
@@ -166,7 +164,6 @@ class SessionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // WHEN
-
         // THEN
         assertThrows(NotFoundException.class, () -> sessionService.participate(sessionId, userId));
         verify(sessionRepository, never()).save(any());
@@ -189,7 +186,6 @@ class SessionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // WHEN
-
         // THEN
         assertThrows(BadRequestException.class, () -> sessionService.participate(sessionId, userId));
         verify(sessionRepository, never()).save(any());
@@ -215,7 +211,6 @@ class SessionServiceTest {
         when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
 
         // WHEN
-
         // THEN
         assertDoesNotThrow(() -> sessionService.noLongerParticipate(sessionId, userId));
         assertFalse(session.getUsers().contains(user1));
@@ -231,7 +226,6 @@ class SessionServiceTest {
         when(sessionRepository.findById(sessionId)).thenReturn(Optional.empty());
 
         // WHEN
-
         // THEN
         assertThrows(NotFoundException.class, () -> sessionService.noLongerParticipate(sessionId, userId));
         verify(sessionRepository, never()).save(any());
@@ -253,7 +247,6 @@ class SessionServiceTest {
         when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
 
         // WHEN
-
         // THEN
         assertThrows(BadRequestException.class, () -> sessionService.noLongerParticipate(sessionId, userId));
         verify(sessionRepository, never()).save(any());
