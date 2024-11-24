@@ -85,22 +85,22 @@ class UserControllerTest {
 
     @Test
     @DisplayName("DELETE /api/user/{id} - Success")
-    @WithMockUser(username = "user@example.com")
+    @WithMockUser(username = "john.doe@test.com")
     void testDeleteUser_Success() throws Exception {
         // GIVEN
         User user = User.builder()
                 .id(1L)
-                .email("user@example.com")
-                .lastName("")
-                .firstName("")
-                .password("")
+                .email("john.doe@test.com")
+                .firstName("John")
+                .lastName("Doe")
+                .password("passsword")
                 .admin(false)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now()).build();
         when(userService.findById(1L)).thenReturn(user);
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
-                .withUsername("user@example.com")
+                .withUsername("john.doe@test.com")
                 .password("password")
                 .roles("USER")
                 .build();
@@ -115,7 +115,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("DELETE /api/user/{id} - Unauthorized")
-    @WithMockUser(username = "otheruser@example.com")
+    @WithMockUser(username = "john.doe@test.com")
     void testDeleteUser_Unauthorized() throws Exception {
         // GIVEN
         User user = new User();
@@ -129,7 +129,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("DELETE /api/user/{id} - Not Found")
-    @WithMockUser(username = "user@example.com")
+    @WithMockUser(username = "john.doe@test.com")
     void testDeleteUser_NotFound() throws Exception {
         // GIVEN
         when(userService.findById(1L)).thenReturn(null);
@@ -142,7 +142,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("DELETE /api/user/{id} - Bad Request")
-    @WithMockUser(username = "user@example.com")
+    @WithMockUser(username = "john.doe@test.com")
     void testDeleteUser_BadRequest() throws Exception {
         // GIVEN
 

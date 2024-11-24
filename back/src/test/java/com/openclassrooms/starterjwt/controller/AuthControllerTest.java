@@ -58,17 +58,17 @@ class AuthControllerTest {
     void testAuthenticateUser_Success() throws Exception {
         // GIVEN
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("test@test.com");
+        loginRequest.setEmail("john.doe@test.com");
         loginRequest.setPassword("password");
 
         Authentication authentication = mock(Authentication.class);
-        UserDetailsImpl userDetails = new UserDetailsImpl(1L, "user@example.com", "John", "Doe", false, "password");
+        UserDetailsImpl userDetails = new UserDetailsImpl(1L, "john.doe@test.com", "John", "Doe", false, "password");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userDetails);
         when(jwtUtils.generateJwtToken(authentication)).thenReturn("jwt-token");
 
-        User user = new User("user@example.com", "Doe", "John", "encodedPassword", false);
+        User user = new User("john.doe@test.com", "Doe", "John", "password", false);
         when(userRepository.findByEmail(userDetails.getUsername())).thenReturn(Optional.of(user));
 
         // WHEN
@@ -89,17 +89,17 @@ class AuthControllerTest {
     void testAuthenticateUser_NoUser() throws Exception {
         // GIVEN
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("test@test.com");
+        loginRequest.setEmail("john.doe@test.com");
         loginRequest.setPassword("password");
 
         Authentication authentication = mock(Authentication.class);
-        UserDetailsImpl userDetails = new UserDetailsImpl(1L, "user@example.com", "John", "Doe", false, "password");
+        UserDetailsImpl userDetails = new UserDetailsImpl(1L, "john.doe@test.com", "John", "Doe", false, "password");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userDetails);
         when(jwtUtils.generateJwtToken(authentication)).thenReturn("jwt-token");
 
-        User user = new User("user@example.com", "Doe", "John", "encodedPassword", false);
+        User user = new User("john.doe@test.com", "Doe", "John", "password", false);
         when(userRepository.findByEmail(userDetails.getUsername())).thenReturn(Optional.empty());
 
         // WHEN
@@ -120,13 +120,13 @@ class AuthControllerTest {
     void testRegisterUser_Success() throws Exception {
         // GIVEN
         SignupRequest signUpRequest = new SignupRequest();
-        signUpRequest.setEmail("test@test.com");
+        signUpRequest.setEmail("john.doe@test.com");
         signUpRequest.setPassword("password");
         signUpRequest.setFirstName("John");
         signUpRequest.setLastName("Doe");
 
         when(userRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(signUpRequest.getPassword())).thenReturn("encodedPassword");
+        when(passwordEncoder.encode(signUpRequest.getPassword())).thenReturn("password");
 
         // WHEN
         // THEN
@@ -143,7 +143,7 @@ class AuthControllerTest {
     void testRegisterUser_EmailTaken() throws Exception {
         // GIVEN
         SignupRequest signUpRequest = new SignupRequest();
-        signUpRequest.setEmail("test@test.com");
+        signUpRequest.setEmail("john.doe@test.com");
         signUpRequest.setPassword("password");
         signUpRequest.setFirstName("John");
         signUpRequest.setLastName("Doe");
