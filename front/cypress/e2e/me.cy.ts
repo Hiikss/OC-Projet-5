@@ -1,9 +1,9 @@
-describe('User information', () => {
+describe('User spec', () => {
   beforeEach(() => {
     cy.login(false);
   });
 
-  it('should display user information correctly', () => {
+  it('Display user information', () => {
     cy.intercept('GET', '/api/user/1', {
       body: {
         id: 1,
@@ -23,7 +23,7 @@ describe('User information', () => {
     cy.get('p').contains('Last update: November 15, 2024');
   });
 
-  it('should go back with history', () => {
+  it('Go back', () => {
     cy.intercept('GET', '/api/user/1', {
       body: {
         id: 1,
@@ -42,7 +42,7 @@ describe('User information', () => {
     cy.url().should('include', '/sessions');
   });
 
-  it('should delete user account successfully', () => {
+  it('Delete user account', () => {
     cy.intercept('GET', '/api/user/1', {
       body: {
         id: 1,

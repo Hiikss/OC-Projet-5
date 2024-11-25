@@ -3,11 +3,11 @@ describe('Register spec', () => {
     cy.visit('/register');
   });
 
-  it('should display register form', () => {
+  it('Display register form', () => {
     cy.get('form').should('be.visible');
   });
 
-  it('should display an error when register form fails', () => {
+  it('Display an error when register form fails', () => {
     cy.get('input[formControlName=firstName]').type("firstname");
     cy.get('input[formControlName=lastName]').type("lastname");
     cy.get('input[formControlName=email]').type("email@email.com");
@@ -16,7 +16,7 @@ describe('Register spec', () => {
     cy.get('.error').should('contain', 'An error occurred');
   });
 
-  it('should register successfully', () => {
+  it('Register successfully', () => {
     cy.intercept('POST', '/api/auth/register', {
       body: {
         message: "User registered successfully!"
